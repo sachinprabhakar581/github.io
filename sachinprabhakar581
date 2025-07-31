@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thoughts on Life</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #000;
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 60px 0 40px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 1rem;
+            font-weight: 300;
+        }
+
+        .thoughts-section {
+            padding: 80px 0;
+        }
+
+        .thought {
+            margin-bottom: 120px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        .thought:nth-child(odd) {
+            animation-delay: 0.2s;
+        }
+
+        .thought:nth-child(even) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .thought-content {
+            font-size: 1.5rem;
+            font-weight: 300;
+            line-height: 1.4;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .thought-meta {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: #333;
+            margin: 60px auto;
+        }
+
+        .add-thought {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 60px;
+            height: 60px;
+            background: #fff;
+            color: #000;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .add-thought:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(255, 255, 255, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #111;
+            padding: 40px;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            border: 1px solid #333;
+        }
+
+        .modal h2 {
+            margin-bottom: 20px;
+            font-weight: 300;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #666;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: 1px solid #666;
+            background: transparent;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #333;
+        }
+
+        .btn-primary {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #ddd;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 100px 0;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            font-weight: 300;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .thought-content {
+                font-size: 1.2rem;
+            }
+            
+            .add-thought {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .modal-content {
+                padding: 30px 20px;
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Thoughts on Life</h1>
+            <p class="subtitle">Reflections from the journey</p>
+        </header>
+
+        <main class="thoughts-section" id="thoughtsContainer">
+            <div class="empty-state" id="emptyState">
+                <h3>No thoughts shared yet</h3>
+                <p>Click the + button to share your first reflection</p>
+            </div>
+        </main>
+    </div>
+
+    <button class="add-thought" onclick="openModal()">+</button>
+
+    <div class="modal" id="thoughtModal">
+        <div class="modal-content">
+            <h2>Share a Thought</h2>
+            <form id="thoughtForm">
+                <div class="form-group">
+                    <textarea 
+                        id="thoughtText" 
+                        placeholder="What's on your mind about life?"
+                        required
+                    ></textarea>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Share Thought</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let thoughts = [];
+
+        function openModal() {
+            document.getElementById('thoughtModal').classList.add('active');
+            document.getElementById('thoughtText').focus();
+        }
+
+        function closeModal() {
+            document.getElementById('thoughtModal').classList.remove('active');
+            document.getElementById('thoughtForm').reset();
+        }
+
+        function addThought(text) {
+            const thought = {
+                id: Date.now(),
+                text: text.trim(),
+                date: new Date().toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                })
+            };
+            
+            thoughts.unshift(thought);
+            renderThoughts();
+        }
+
+        function renderThoughts() {
+            const container = document.getElementById('thoughtsContainer');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (thoughts.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            container.innerHTML = thoughts.map((thought, index) => `
+                <div class="thought fade-in" style="animation-delay: ${index * 0.1}s">
+                    <div class="thought-content">${thought.text}</div>
+                    <div class="thought-meta">${thought.date}</div>
+                    ${index < thoughts.length - 1 ? '<div class="divider"></div>' : ''}
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('thoughtForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const text = document.getElementById('thoughtText').value;
+            if (text.trim()) {
+                addThought(text);
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('thoughtModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Initialize with a sample thought
+        addThought("The most profound moments often come in the quiet spaces between our rushing thoughts.");
+    </script>
+</body>
+</html>
